@@ -53,6 +53,9 @@ public class TemperatureProcessingController {
 
     log.info("temperatureLogOutput: {}", temperatureLogOutput);
 
-    rabbitTemplate.convertAndSend(FANOUT_EXCHANGE_NAME, "", temperatureLogOutput);
+    rabbitTemplate.convertAndSend(FANOUT_EXCHANGE_NAME, "", temperatureLogOutput, message -> {
+      message.getMessageProperties().setHeader("sensorId", sensorId.toString());
+      return message;
+    });
   }
 }
